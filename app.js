@@ -20,16 +20,19 @@ app.set('views', __dirname + '/views');
 swig.setDefaults({cache: false});
 
 app.use("/wiki", require("./routes/wiki"));
+app.use("/users", require("./routes/user"));
 
 app.get("/", function(req, res){
 	res.render("index");
 })
 
+Page.belongsTo(User, {as:"author"});
 
+var forceBoolean = false;
 
-Page.sync()
+Page.sync({force: forceBoolean})
 .then(function(){
-	return User.sync();
+	return User.sync({force: forceBoolean});
 })
 .then(function(){
 	app.listen(3000, function(){
